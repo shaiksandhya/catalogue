@@ -21,8 +21,30 @@ pipeline {
         stage('Build'){
              steps {
                 sh 'ls -ltr'
+                sh 'zip -r catalogue.zip ./* --exclude=.git --exclude=.zip'
             }
         }
+        //install pipeline utility steps plugin, if not installed
+        stage('Publish Artifact') {
+            steps {
+                nexusArtifactUploader(
+                    nexusVersion: 'nexus3',
+                    protocol: 'http',
+                    nexusUrl: '172.31.32.147:8081/',
+                    groupId: 'com.roboshop',
+                    version: "$packageVersion",
+                    repository: 'catalogue',
+                    credentialsId: 'nexus-auth',
+                    artifacts: [
+                        [artifactId: 'catalogue',
+                        classifier: '',
+                        file: 'catalogue.zip',
+                        type: 'zip']
+                    ]
+                )
+            }
+        }
+
         stage('Deploy') {
             steps {
                 echo "Deployment"
