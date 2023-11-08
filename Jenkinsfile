@@ -6,16 +6,21 @@ pipeline {
                 sh "npm install"
             }
         }
-        stage('unit test') {
+        stage('unit test'){
             steps {
                 echo "unit testing is done here"
             }
         }
         //sonar-scanner command expect sonar-project.properties should be available
-        stage('Sonar Scanner') {
+        stage('sonar scanner'){
              steps {
                 sh 'ls -ltr'
                 sh 'sonar-scanner'
+            }
+        }
+        stage('deploy'){
+             steps {
+                echo "Deployment"
             }
         }
     }
